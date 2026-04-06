@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faluna: Panic Console</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="boot-error" style="display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;padding:12px 14px;border:1px solid rgba(255,93,115,.45);border-radius:12px;background:rgba(18,10,16,.94);color:#ffd7de;font:13px/1.45 Consolas, monospace;white-space:pre-wrap;box-shadow:0 12px 34px rgba(0,0,0,.35);"></div>
+  <div id="app-shell" class="app-shell">
+    <header class="top-bar">
+      <div>
+        <p id="top-eyebrow" class="eyebrow">Faluna Emergency Ops</p>
+        <h1 id="game-title">Faluna: Panic Console</h1>
+      </div>
+      <div class="top-bar-status">
+        <div class="lang-switch" aria-label="Language switch">
+          <button id="lang-en" class="lang-button" type="button">EN</button>
+          <button id="lang-zh" class="lang-button" type="button">中文</button>
+        </div>
+        <span id="version-pill" class="status-pill">v1.2 Pre-Release Polish Update</span>
+      </div>
+    </header>
+
+    <main id="screen-frame" class="screen-frame">
+      <div id="damage-overlay" class="damage-overlay"></div>
+      <div id="feedback-layer" class="feedback-layer" aria-hidden="true"></div>
+      <div id="tutorial-overlay" class="tutorial-overlay hidden" aria-hidden="true">
+        <div class="tutorial-backdrop"></div>
+        <div class="tutorial-panel">
+          <p id="tutorial-panel-label" class="panel-label">Faluna Tutorial</p>
+          <p id="tutorial-text" class="tutorial-text">This is an anomaly. Click it to resolve it.</p>
+          <button id="tutorial-continue-button" class="primary-button tutorial-button hidden">Continue</button>
+        </div>
+      </div>
+
+      <section id="home-screen" class="screen active">
+        <div class="hero-panel">
+          <p id="home-panel-label" class="panel-label">Console Ready</p>
+          <h2 id="home-headline">Push the unstable anomaly flood back.</h2>
+          <p id="home-subtitle" class="home-subtitle">Survive the system for 60 seconds.</p>
+          <p id="home-description" class="hero-copy">
+            Keep clearing anomalies for 60 seconds, protect system stability, and hold the line through the final surge.
+          </p>
+          <div id="home-best-score" class="home-best-score">
+            <span id="best-score-label" class="panel-label">BEST SCORE</span>
+            <strong id="best-score-display">--</strong>
+          </div>
+          <div class="home-actions">
+            <button id="start-button" class="primary-button">Start</button>
+          </div>
+          <p id="home-tip" class="home-tip">Click anomaly cards to resolve them</p>
+          <ul class="rule-list">
+            <li id="rule-normal">Normal anomaly: one click, steady cleanup</li>
+            <li id="rule-urgent">Urgent anomaly: shorter lifetime, higher priority</li>
+            <li id="rule-stubborn">Stubborn anomaly: needs two hits, stronger payoff</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen">
+        <div class="hud-stack">
+          <div class="hud-grid">
+            <div class="hud-card timer-card">
+              <span id="timer-label" class="hud-label">Time</span>
+              <strong id="timer-display" class="hud-value">60</strong>
+            </div>
+            <div class="hud-card score-card">
+              <span id="score-label" class="hud-label">Score</span>
+              <strong id="score-display" class="hud-value">0</strong>
+            </div>
+            <div id="combo-card" class="hud-card combo-card">
+              <div class="combo-head">
+                <span id="combo-label" class="hud-label">Streak</span>
+                <span id="combo-multiplier" class="combo-multiplier">x1.0</span>
+              </div>
+              <strong id="combo-display" class="hud-value">0</strong>
+              <span id="combo-caption" class="combo-caption">Keep your pace</span>
+            </div>
+          </div>
+
+          <div class="hud-card stability-card">
+            <div class="hud-label-row">
+              <span id="stability-label" class="hud-label">Stability</span>
+              <div class="hud-inline-actions">
+                <strong id="stability-display" class="stability-value">100%</strong>
+                <button id="debug-toggle" class="debug-toggle" type="button" aria-pressed="false">DEBUG</button>
+              </div>
+            </div>
+            <div class="stability-bar">
+              <div id="stability-fill" class="stability-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <section class="console-panel">
+          <div class="panel-header">
+            <div>
+              <p id="anomaly-panel-label" class="panel-label">Live Incident Board</p>
+              <h2 id="anomaly-zone-title">Anomaly Zone</h2>
+            </div>
+            <p id="phase-display" class="panel-caption">Phase 1 / Calibration</p>
+          </div>
+          <div id="anomaly-area" class="anomaly-area" aria-live="polite"></div>
+        </section>
+
+        <aside class="faluna-panel">
+          <div class="faluna-profile">
+            <div id="faluna-avatar-shell" class="faluna-avatar-shell missing" aria-hidden="true">
+              <img id="faluna-avatar-image" class="faluna-avatar-image" src="assets/images/faluna-avatar.png" alt="Faluna avatar">
+              <div class="faluna-avatar-fallback">F</div>
+            </div>
+            <div class="faluna-profile-copy">
+              <p class="panel-label">Operator Link</p>
+              <h3 class="faluna-name">Faluna</h3>
+            </div>
+          </div>
+          <p id="faluna-guidance-label" class="panel-label">Faluna Guidance</p>
+          <p id="faluna-message" class="faluna-message">System conditions are still controllable.</p>
+          <p id="debug-log" class="debug-log hidden">Debug standby.</p>
+          <div id="final-surge-banner" class="final-surge-banner hidden">FINAL SURGE</div>
+        </aside>
+      </section>
+
+      <section id="result-screen" class="screen">
+        <div class="result-panel">
+          <p id="result-panel-label" class="panel-label">Session Report</p>
+          <h2 id="result-title">MISSION COMPLETE</h2>
+          <p id="result-summary" class="result-summary">You held the console together for the full 60 seconds.</p>
+
+          <div class="result-score-block">
+            <span id="final-score-label">Final Score</span>
+            <strong id="final-score-display">0</strong>
+            <p id="result-grade" class="result-grade">S / Stable Control</p>
+            <p id="new-record-badge" class="new-record-badge hidden">NEW RECORD</p>
+          </div>
+
+          <div class="result-stats-grid">
+            <div class="result-stat">
+              <span id="max-combo-label">Best Streak</span>
+              <strong id="max-combo-display">0</strong>
+            </div>
+            <div class="result-stat">
+              <span id="resolved-count-label">Resolved</span>
+              <strong id="resolved-count-display">0</strong>
+            </div>
+            <div class="result-stat">
+              <span id="missed-count-label">Missed</span>
+              <strong id="missed-count-display">0</strong>
+            </div>
+            <div id="result-best-score-card" class="result-stat">
+              <span id="result-best-score-label">Best Score</span>
+              <strong id="result-best-score-display">--</strong>
+            </div>
+          </div>
+
+          <p id="final-surge-result" class="final-surge-result hidden">Final Surge survived</p>
+
+          <div class="result-actions">
+            <button id="restart-button" class="primary-button">Play Again</button>
+            <button id="home-button" class="secondary-button">Back to Menu</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
+
