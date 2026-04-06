@@ -1,6 +1,6 @@
 # 🎮 FALUNA: Panic Console
 
-![Faluna Panic Console](assets/images/faluna-avatar.png)
+![Faluna Panic Console](assets/images/cover.png)
 
 > Survive the system for 60 seconds.
 
